@@ -1,2 +1,2 @@
-*.rkt            text
+*.rkt            diff
 *                encoding=UTF-8
