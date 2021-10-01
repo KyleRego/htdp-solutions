@@ -1,0 +1,47 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname exercise173) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+; exercise 173
+
+(define line1 (cons "hello"
+                    (cons "the"
+                          (cons "world" '()))))
+(define line2 (cons "hello"
+                    (cons "an"
+                          (cons "world" '()))))
+(define line3 (cons "hello"
+                    (cons "a"
+                          (cons "world" '()))))
+(define ln (cons line1
+                 (cons line2
+                       (cons line3 '()))))
+
+; An LN is one of: 
+; – '()
+; – (cons Los LN)
+; interpretation a list of lines, each is a list of Strings
+
+; LN -> LN
+; removes all articles ("a" "an" "the") from the LN
+(check-expect (rm-articles '()) '())
+(check-expect (rm-articles ln)
+              (cons (cons "hello" (cons "world" '()))
+                    (cons (cons "hello" (cons "world" '()))
+                          (cons (cons "hello" (cons "world" '())) '()))))
+(define (rm-articles alol)
+  (cond
+    [(empty? alol) '()]
+    [else (cons (rm-article (first alol)) (rm-articles (rest alol)))]))
+
+; List-of-strings -> List-of-strings
+; remove all articles from the list
+(define (rm-article line)
+  (cond
+    [(empty? line) '()]
+    [else (if (or
+             (string=? (first line) "an")
+             (string=? (first line) "a")
+             (string=? (first line) "the"))
+        (rm-article (rest line))
+        (cons (first line) (rm-article (rest line))))]))
+  
