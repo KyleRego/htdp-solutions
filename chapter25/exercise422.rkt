@@ -1,0 +1,51 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-intermediate-lambda-reader.ss" "lang")((modname exercise422) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+; exercise 422
+
+; [List-of Any] N -> [List-of [List-of Any]]
+; breaks a list into a list of lists of size n
+(check-expect (list->chunks
+               (list "a" "b" "c") 1)
+              (list (list "a") (list "b") (list "c")))
+(check-expect (list->chunks
+               (list "a" "b" "c") 2)
+              (list (list "a" "b") (list "c")))
+(check-expect (list->chunks
+               (list 1 2 3 4 5 6) 2)
+              (list (list 1 2) (list 3 4) (list 5 6)))
+(define (list->chunks aloa n)
+  (cond
+    [(empty? aloa) '()]
+    [else (cons
+           (take aloa n)
+           (list->chunks (drop aloa n) n))]))
+
+; [List-of Any] N -> [List-of Any]
+; returns a list of the first n items of aloa
+(check-expect (take (list "a" 1 2) 2) (list "a" 1))
+(define (take aloa n)
+  (cond
+    [(empty? aloa) '()]
+    [(= n 0) '()]
+    [else (cons (first aloa)
+                (take (rest aloa) (- n 1)))]))
+
+; [List-of Any] N -> [List-of Any]
+; returns a list with the first n items of aloa dropped
+(check-expect (drop (list "a" 1 2) 1) (list 1 2))
+(define (drop aloa n)
+  (cond
+    [(empty? aloa) '()]
+    [(= n 0) aloa]
+    [else (drop (rest aloa) (- n 1))]))
+
+
+; [List-of 1String] N -> [List-of String]
+; bundles chunks of s into strings of length n
+(check-expect (bundle (explode "abcdefg") 3)
+              (list "abc" "def" "g"))
+(check-expect (bundle '("a" "b") 3) (list "ab"))
+(check-expect (bundle '() 3) '())
+(define (bundle alo1s n)
+  (map implode (list->chunks alo1s n)))
