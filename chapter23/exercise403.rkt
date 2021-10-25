@@ -1,0 +1,36 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-intermediate-lambda-reader.ss" "lang")((modname exercise403) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+; exercise 403
+
+(define-struct db [schema content])
+; A DB is a structure: (make-db Schema Content)
+ 
+; A Schema is a [List-of Spec]
+(define-struct spec [label predicate])
+; Spec is a structure: (make-spec Label Predicate)
+
+; A Label is a String
+; A Predicate is a [Any -> Boolean]
+ 
+; A (piece of) Content is a [List-of Row]
+; A Row is a [List-of Cell]
+; A Cell is Any
+; constraint cells do not contain functions 
+ 
+; integrity constraint In (make-db sch con), 
+; for every row in con,
+; (I1) its length is the same as sch's, and
+; (I2) its ith Cell satisfies the ith Predicate in sch
+
+
+(define school-schema
+  (list
+   (make-spec "Name" string?)
+   (make-spec "Age" integer?)
+   (make-spec "Present" boolean?)))
+
+(define presence-schema
+  (list
+   (make-spec "Present" boolean?)
+   (make-spec "Description" string?)))
